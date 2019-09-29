@@ -1,12 +1,12 @@
 SHELL:=/usr/bin/env bash
 SDCC?=sdcc
-SDCCLIB?=sdcclib
+SDAR?=sdar
 SRCDIR=./src
 BINDIR=./bin
-# INCLUDES=\
-# ./vendor/stm8s/inc\
-# ./vendor/button_debounce/inc
-CFLAGS=--std-c11 --nolospre $(addprefix -I,$(INCLUDES))
+INCLUDES=\
+  ./vendor/stm8s/inc
+CDEFS=-DSTM8S103
+CFLAGS=--std-c11 --nolospre $(addprefix -I,$(INCLUDES)) $(CDEFS)
 LDFLAGS=--out-fmt-ihx
 ENTRY_SOURCE_FILE=$(shell find $(SRCDIR) -maxdepth 1 -name "main.c")
 APP_SOURCE_FILES=$(filter-out $(ENTRY_SOURCE_FILE), $(shell find $(SRCDIR) -name "*.c"))
@@ -31,12 +31,12 @@ $(BINDIR)/%.rel: %.c
 
 $(BINDIR)/vendor.lib: $(LIB_OBJECTS)
 	[[ ! -z "$^" ]] &&\
-	$(SDCCLIB) $@ $^ ||\
+	$(SDAR) -rc $@ $^ ||\
 	touch $@
 
 $(BINDIR)/app.lib: $(APP_OBJECTS)
 	[[ ! -z "$^" ]] &&\
-	$(SDCCLIB) $@ $^ ||\
+	$(SDAR) -rc $@ $^ ||\
 	touch $@
 
 %.c: %.h
