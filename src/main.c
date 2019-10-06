@@ -2,8 +2,10 @@
 #include "tim4_periodic_timer.h"
 #include "time_prescaler8.h"
 
-CONST TimePrescaler8_Config prescaler_config = {.target = &half_second_handler,
-                                                .reload_value = (0x100 - 250)};
+CONST TimePrescaler8_Config prescaler_config = {
+    .reload_value = (0x100 - 250),
+    .target = &half_second_handler,
+};
 static TimePrescaler8_State prescaler_state;
 void half_second_handler(void) {
   ChgBit(GPIOB->ODR, 5);
