@@ -10,7 +10,6 @@ include utilities/builder/Makefile
 .PHONY: build clean
 
 build: $(OUTPUT_HEX)
-# build: $(BIN_DIR)/vendor.lib
 
 clean:
 	rm -rf $(BIN_DIR) || true
