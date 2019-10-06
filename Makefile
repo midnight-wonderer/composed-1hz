@@ -1,42 +1,16 @@
-SHELL:=/usr/bin/env bash
-SDCC?=sdcc
-SDAR?=sdar
-SRCDIR=./src
-BINDIR=./bin
-INCLUDES=\
-  ./vendor/stm8s/inc
-CDEFS=-DSTM8S103
-CFLAGS=--std-c11 --nolospre $(addprefix -I,$(INCLUDES)) $(CDEFS)
-LDFLAGS=--out-fmt-ihx
-ENTRY_SOURCE_FILE=$(shell find $(SRCDIR) -maxdepth 1 -name "main.c")
-APP_SOURCE_FILES=$(filter-out $(ENTRY_SOURCE_FILE), $(shell find $(SRCDIR) -name "*.c"))
-LIB_SOURCE_FILES=$(shell find $(INCLUDES) -name "*.c")
-ENTRY_OBJECT=$(subst /./,/,$(addprefix $(BINDIR)/,$(ENTRY_SOURCE_FILE:.c=.rel)))
-APP_OBJECTS=$(subst /./,/,$(addprefix $(BINDIR)/,$(APP_SOURCE_FILES:.c=.rel)))
-LIB_OBJECTS=$(subst /./,/,$(addprefix $(BINDIR)/,$(LIB_SOURCE_FILES:.c=.rel)))
+SHELL := /usr/bin/env bash
+
+CC = sdcc
+LD = sdcc
+AR = sdar
+CDEFS = -DSTM8S103
+
+include utilities/builder/Makefile
 
 .PHONY: build clean
 
-build: $(BINDIR)/program.hex
+build: $(OUTPUT_HEX)
+# build: $(BIN_DIR)/vendor.lib
 
 clean:
-	rm -rf $(BINDIR)/
-
-$(BINDIR)/program.hex: $(ENTRY_OBJECT) $(BINDIR)/vendor.lib $(BINDIR)/app.lib
-	$(SDCC) -mstm8 -lstm8 -o $@ $(LDFLAGS) $^
-
-$(BINDIR)/%.rel: %.c
-	mkdir -p $(dir $@) &&\
-	$(SDCC) -mstm8 -o $@ -c $(CFLAGS) $^
-
-$(BINDIR)/vendor.lib: $(LIB_OBJECTS)
-	[[ ! -z "$^" ]] &&\
-	$(SDAR) -rc $@ $^ ||\
-	touch $@
-
-$(BINDIR)/app.lib: $(APP_OBJECTS)
-	[[ ! -z "$^" ]] &&\
-	$(SDAR) -rc $@ $^ ||\
-	touch $@
-
-%.c: %.h
+	rm -rf $(BIN_DIR) || true

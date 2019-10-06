@@ -1,3 +1,15 @@
 [submodule "vendor/stm8s"]
 	path = vendor/stm8s
 	url = https://github.com/the-cave/stm8s-header.git
+[submodule "utilities/builder"]
+	path = utilities/builder
+	url = https://github.com/midnight-wonderer/universal-stm8-builder.git
+	branch = master
+[submodule "vendor/periodic-timer"]
+	path = vendor/periodic-timer
+	url = https://github.com/midnight-wonderer/stm8s-tim4-periodic-timer.git
+	branch = master
+[submodule "vendor/time-prescaler"]
+	path = vendor/time-prescaler
+	url = https://github.com/the-cave/time-prescaler.git
+	branch = master
